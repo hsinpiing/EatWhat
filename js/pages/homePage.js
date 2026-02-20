@@ -151,8 +151,8 @@ const HomePage = {
     const stars = place.rating ? '⭐'.repeat(Math.round(place.rating)) : '';
     const priceText = place.price_level ? '$'.repeat(place.price_level) : '';
     const visitText = visitCount > 0 ? t('card.visited', { n: visitCount }) : t('card.firstTime');
-    const photoRef = place.photos && place.photos[0] ? place.photos[0].photo_reference : null;
-    const photoUrl = photoRef ? MapsService.getPhotoUrl(photoRef) : null;
+    const photo = place.photos && place.photos[0] ? place.photos[0] : null;
+    const photoUrl = photo ? MapsService.getPhotoUrl(photo) : null;
 
     const card = document.createElement('div');
     card.className = 'restaurant-card bg-gray-800 rounded-2xl overflow-hidden flex flex-col';
