@@ -8,7 +8,7 @@ const TRANSLATIONS = {
     'settings.clearHistory': '清除歷史紀錄',
     'settings.clearBlacklist': '清除黑名單',
     'settings.bmc': '喜歡吃啥嗎？請作者喝杯飲料',
-    'settings.about': '吃啥 EatWhat v1.0 · 食啥物',
+    'settings.about': '吃啥 EatWhat v1.0 · 呷蝦米',
     'home.locationPlaceholder': '輸入地址或地標...',
     'home.cta': '幫我決定吃什麼！',
     'home.bmc': '喜歡吃啥？請作者喝杯飲料',
@@ -72,7 +72,7 @@ const TRANSLATIONS = {
     'settings.clearHistory': '清除历史记录',
     'settings.clearBlacklist': '清除黑名单',
     'settings.bmc': '喜欢吃啥吗？请作者喝杯饮料',
-    'settings.about': '吃啥 EatWhat v1.0 · 食啥物',
+    'settings.about': '吃啥 EatWhat v1.0 · 呷蝦米',
     'home.locationPlaceholder': '输入地址或地标...',
     'home.cta': '帮我决定吃什么！',
     'home.bmc': '喜欢吃啥？请作者喝杯饮料',
@@ -129,7 +129,7 @@ const TRANSLATIONS = {
     'settings.clearHistory': 'Clear History',
     'settings.clearBlacklist': 'Clear Blacklist',
     'settings.bmc': 'Like EatWhat? Buy the creator a drink!',
-    'settings.about': 'EatWhat v1.0 · 食啥物',
+    'settings.about': 'EatWhat v1.0 · 呷蝦米',
     'home.locationPlaceholder': 'Enter address or landmark...',
     'home.cta': 'Help me decide!',
     'home.bmc': 'Like EatWhat? Buy the creator a drink!',
@@ -188,7 +188,7 @@ function t(key, vars = {}) {
 
 function getCurrentLang() {
   const s = JSON.parse(localStorage.getItem('eatwhat_settings') || '{}');
-  return s.language || navigator.language?.slice(0,5) || 'zh-TW';
+  return s.language || 'en';
 }
 
 function setLanguage(lang) {
