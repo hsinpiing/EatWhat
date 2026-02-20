@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>吃啥 EatWhat</title>
+  <meta name="description" content="30秒決定今天吃什麼！隨機餐廳推薦" />
+  <meta name="theme-color" content="#f97316" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { primary: '#f97316', 'primary-dark': '#ea580c' } } }
+    }
+  </script>
+  <style>
+    body { font-family: 'Noto Sans TC', sans-serif; }
+    .tag-btn { transition: all 0.15s ease; }
+    .tag-btn.active { background-color: #f97316; color: white; border-color: #f97316; }
+    .card-enter { animation: cardEnter 0.4s ease; }
+    @keyframes cardEnter { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .toast { animation: toastIn 0.3s ease; }
+    @keyframes toastIn { from { opacity:0; transform:translateX(100%); } to { opacity:1; transform:translateX(0); } }
+    .bottom-nav { padding-bottom: env(safe-area-inset-bottom, 8px); }
+    .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen pb-20">
+
+  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+  <!-- First Visit Modal -->
+  <div id="first-visit-modal" class="hidden fixed inset-0 bg-black/70 z-40 flex items-center justify-center p-4">
+    <div class="bg-gray-800 rounded-2xl p-6 max-w-sm w-full">
+      <div class="text-3xl mb-3">💡</div>
+      <h3 class="text-lg font-bold mb-2" data-i18n="firstVisit.title">小提醒</h3>
+      <p class="text-gray-300 text-sm leading-relaxed" data-i18n="firstVisit.body">你的黑名單和歷史紀錄儲存在這台設備的瀏覽器裡。換設備或清除瀏覽器資料，紀錄就會消失喔！</p>
+      <button id="first-visit-ok" class="mt-4 w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 rounded-xl transition" data-i18n="firstVisit.ok">我知道了</button>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="hidden fixed inset-0 bg-black/70 z-40 flex items-center justify-center p-4">
+    <div class="bg-gray-800 rounded-2xl p-6 max-w-sm w-full">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold" data-i18n="settings.title">設定</h3>
+        <button id="settings-close" class="text-gray-400 hover:text-white text-xl">✕</button>
+      </div>
+      <div class="mb-4">
+        <p class="text-sm text-gray-400 mb-2" data-i18n="settings.language">語言</p>
+        <div class="flex gap-2">
+          <button class="lang-btn tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-lang="zh-TW">繁中</button>
+          <button class="lang-btn tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-lang="zh-CN">简中</button>
+          <button class="lang-btn tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-lang="en">EN</button>
+        </div>
+      </div>
+      <hr class="border-gray-700 my-3" />
+      <button id="clear-history-btn" class="w-full text-left text-sm text-red-400 hover:text-red-300 py-2" data-i18n="settings.clearHistory">清除歷史紀錄</button>
+      <button id="clear-blacklist-btn" class="w-full text-left text-sm text-red-400 hover:text-red-300 py-2" data-i18n="settings.clearBlacklist">清除黑名單</button>
+      <hr class="border-gray-700 my-3" />
+      <a href="https://buymeacoffee.com/eatwhat" target="_blank" class="flex items-center gap-2 text-sm text-yellow-400 hover:text-yellow-300 py-2">
+        ☕ <span data-i18n="settings.bmc">喜歡吃啥嗎？請作者喝杯飲料</span>
+      </a>
+      <p class="text-xs text-gray-500 mt-3" data-i18n="settings.about">吃啥 EatWhat v1.0 · 食啥物</p>
+    </div>
+  </div>
+
+  <!-- Page: Home -->
+  <div id="page-home" class="page">
+    <div class="bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+      <div>
+        <h1 class="text-xl font-bold text-primary">🍽️ 吃啥</h1>
+        <p class="text-xs text-gray-400">EatWhat · 食啥物</p>
+      </div>
+      <button id="settings-btn" class="text-gray-400 hover:text-white text-xl p-1">⚙️</button>
+    </div>
+    <div class="px-4 py-4 max-w-lg mx-auto">
+      <div class="mb-4">
+        <div class="flex gap-2">
+          <div class="flex-1 bg-gray-800 rounded-xl px-4 py-3 flex items-center gap-2">
+            <span class="text-primary">📍</span>
+            <input id="location-input" type="text" class="bg-transparent flex-1 text-sm outline-none placeholder-gray-500" placeholder="輸入地址或地標..." data-i18n-placeholder="home.locationPlaceholder" />
+          </div>
+          <button id="gps-btn" class="bg-gray-800 hover:bg-gray-700 px-3 rounded-xl text-lg transition" title="自動定位">🎯</button>
+        </div>
+        <p id="location-status" class="text-xs text-gray-500 mt-1 px-1"></p>
+      </div>
+
+      <button id="recommend-btn" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-2xl text-lg transition mb-3 flex items-center justify-center gap-2">
+        <span>🎲</span><span data-i18n="home.cta">幫我決定吃什麼！</span>
+      </button>
+
+      <div class="text-center mb-4">
+        <a href="https://buymeacoffee.com/eatwhat" target="_blank" class="text-xs text-gray-500 hover:text-yellow-400 transition">
+          ☕ <span data-i18n="home.bmc">喜歡吃啥？請作者喝杯飲料</span> →
+        </a>
+      </div>
+
+      <details class="bg-gray-900 rounded-2xl mb-4">
+        <summary class="px-4 py-3 cursor-pointer text-sm text-gray-300 flex items-center justify-between select-none">
+          <span>🔽 <span data-i18n="home.filterTitle">告訴我更多（可不選）</span></span>
+          <span class="text-xs text-gray-500" id="filter-count"></span>
+        </summary>
+        <div class="px-4 pb-4 space-y-4">
+          <div>
+            <p class="text-xs text-gray-400 mb-2" data-i18n="filter.people">👥 幾個人吃？</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="people" data-value="solo" data-i18n="filter.solo">一人</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="people" data-value="two" data-i18n="filter.two">兩人</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="people" data-value="group" data-i18n="filter.group">多人</button>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 mb-2" data-i18n="filter.occasion">🎭 什麼場合？</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="occasion" data-value="coffee-chat">Coffee Chat</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="occasion" data-value="business" data-i18n="filter.business">商務會議</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="occasion" data-value="friends" data-i18n="filter.friends">朋友聚會</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="occasion" data-value="family" data-i18n="filter.family">家庭聚餐</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="occasion" data-value="date" data-i18n="filter.date">約會</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="occasion" data-value="anniversary" data-i18n="filter.anniversary">週年紀念</button>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 mb-2" data-i18n="filter.foodType">🍽️ 想吃什麼？</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="chinese" data-i18n="food.chinese">中式</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="japanese" data-i18n="food.japanese">日式</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="korean" data-i18n="food.korean">韓式</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="western" data-i18n="food.western">西式</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="southeast" data-i18n="food.southeast">東南亞</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="international" data-i18n="food.international">異國料理</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="bbq" data-i18n="food.bbq">燒烤</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="hotpot" data-i18n="food.hotpot">火鍋</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="vegetarian" data-i18n="food.vegetarian">素食</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="brunch" data-i18n="food.brunch">早午餐</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="dessert" data-i18n="food.dessert">甜點</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="cafe" data-i18n="food.cafe">咖啡廳</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="bubbletea" data-i18n="food.bubbletea">奶茶</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="bar" data-i18n="food.bar">酒吧</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="food" data-value="other" data-i18n="food.other">其他</button>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 mb-2" data-i18n="filter.price">💰 預算？</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="price" data-value="1">$</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="price" data-value="2">$$</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="price" data-value="3">$$$</button>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 mb-2" data-i18n="filter.distance">📏 距離？</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="distance" data-value="400" data-i18n="dist.walk5">步行 5 分</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="distance" data-value="1200" data-i18n="dist.walk15">步行 15 分</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="distance" data-value="5000" data-i18n="dist.drive10">開車 10 分</button>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 mb-2" data-i18n="filter.sort">⭐ 推薦方式？</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="sort" data-value="weighted" data-i18n="sort.weighted">高分優先</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="sort" data-value="random" data-i18n="sort.random">純隨機 🎲</button>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 mb-2" data-i18n="filter.dietary">🥗 飲食需求？</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="halal">Halal</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="no-pork" data-i18n="dietary.nopork">無豬肉</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="vegetarian" data-i18n="dietary.veg">素食</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="vegan" data-i18n="dietary.vegan">純素</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="gluten-free">Gluten-free</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="nut-free">Nut-free</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="kid-friendly" data-i18n="dietary.kid">兒童友善</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="pet-friendly" data-i18n="dietary.pet">寵物友善</button>
+              <button class="tag-btn px-3 py-1 rounded-full border border-gray-600 text-sm" data-group="dietary" data-value="accessible" data-i18n="dietary.accessible">無障礙</button>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div id="results-section" class="hidden">
+        <h2 class="text-sm font-bold text-gray-300 mb-3" data-i18n="home.resultsTitle">✨ 今天吃這些吧！</h2>
+        <div id="results-container" class="grid grid-cols-2 gap-3 mb-3"></div>
+        <button id="retry-btn" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
+          🔄 <span data-i18n="home.retry">換兩家試試看</span>
+        </button>
+      </div>
+
+      <div id="error-section" class="hidden bg-gray-900 rounded-2xl p-4 text-center">
+        <div id="error-icon" class="text-3xl mb-2">😅</div>
+        <p id="error-message" class="text-sm text-gray-300"></p>
+        <div class="flex gap-2 mt-3 justify-center">
+          <button id="error-retry-btn" class="hidden bg-primary hover:bg-primary-dark text-white text-sm px-4 py-2 rounded-xl transition" data-i18n="error.relax">放寬條件</button>
+          <button id="error-refresh-btn" class="bg-gray-700 hover:bg-gray-600 text-white text-sm px-4 py-2 rounded-xl transition" data-i18n="error.refresh">重新整理</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page: History -->
+  <div id="page-history" class="page hidden">
+    <div class="bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+      <h2 class="text-lg font-bold" data-i18n="history.title">🗓️ 我的足跡</h2>
+      <button id="share-report-btn" class="text-xs bg-primary hover:bg-primary-dark px-3 py-1 rounded-full text-white transition" data-i18n="history.share">分享月報</button>
+    </div>
+    <div class="px-4 py-4 max-w-lg mx-auto">
+      <div class="flex items-center justify-between mb-4">
+        <button id="prev-month" class="text-gray-400 hover:text-white px-3 py-1 text-xl">‹</button>
+        <h3 id="calendar-month-label" class="font-bold"></h3>
+        <button id="next-month" class="text-gray-400 hover:text-white px-3 py-1 text-xl">›</button>
+      </div>
+      <div id="calendar-grid" class="mb-4"></div>
+      <div id="day-detail" class="hidden bg-gray-800 rounded-xl p-4 mb-4">
+        <h4 id="day-detail-title" class="text-sm font-bold text-gray-300 mb-2"></h4>
+        <div id="day-detail-list"></div>
+      </div>
+      <div id="monthly-stats" class="bg-gray-900 rounded-2xl p-4 mb-4 hidden">
+        <p class="text-sm font-bold mb-3" data-i18n="history.stats">📊 本月統計</p>
+        <div id="stats-content" class="space-y-1 text-sm text-gray-300"></div>
+      </div>
+      <div id="history-empty" class="text-center py-12 hidden">
+        <p class="text-4xl mb-3">🍽️</p>
+        <p class="text-gray-400 text-sm" data-i18n="history.empty">還沒有紀錄，快去探索吧！</p>
+      </div>
+      <div class="text-center mt-4">
+        <a href="https://buymeacoffee.com/eatwhat" target="_blank" class="text-xs text-gray-500 hover:text-yellow-400 transition">
+          ☕ <span data-i18n="home.bmc">喜歡吃啥？請作者喝杯飲料</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page: Blacklist -->
+  <div id="page-blacklist" class="page hidden">
+    <div class="bg-gray-900 border-b border-gray-800 px-4 py-3 sticky top-0 z-30">
+      <h2 class="text-lg font-bold" data-i18n="blacklist.title">🚫 黑名單</h2>
+    </div>
+    <div class="px-4 py-4 max-w-lg mx-auto">
+      <div id="blacklist-list" class="space-y-2 mb-4"></div>
+      <button id="clear-all-blacklist" class="hidden w-full text-sm text-red-400 hover:text-red-300 py-2 border border-red-900 rounded-xl transition" data-i18n="blacklist.clearAll">清空全部黑名單</button>
+      <div id="blacklist-empty" class="text-center py-12 hidden">
+        <p class="text-4xl mb-3">✅</p>
+        <p class="text-gray-400 text-sm" data-i18n="blacklist.empty">黑名單是空的，繼續探索吧！</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 flex z-30">
+    <button class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-xs text-primary" data-page="home">
+      <span class="text-xl">🏠</span><span data-i18n="nav.home">首頁</span>
+    </button>
+    <button class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-xs text-gray-400" data-page="history">
+      <span class="text-xl">🗓️</span><span data-i18n="nav.history">足跡</span>
+    </button>
+    <button class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-xs text-gray-400" data-page="blacklist">
+      <span class="text-xl">🚫</span><span data-i18n="nav.blacklist">黑名單</span>
+    </button>
+  </nav>
+
+  <!-- Share Template (hidden) -->
+  <div id="share-template" class="fixed bg-gray-950 p-6 rounded-2xl w-80" style="left:-9999px;top:0;">
+    <div class="text-center mb-4">
+      <p class="text-2xl font-bold text-orange-500">🍽️ 吃啥 EatWhat</p>
+      <p id="share-month-label" class="text-gray-300 text-sm mt-1"></p>
+    </div>
+    <div id="share-calendar" class="mb-4 text-white"></div>
+    <div id="share-stats" class="bg-gray-900 rounded-xl p-3 text-sm text-gray-300 space-y-1"></div>
+    <p class="text-center text-xs text-gray-500 mt-4">eatwhat.app · 食啥物</p>
+  </div>
+
+  <script src="js/config/constants.js"></script>
+  <script src="js/i18n/i18n.js"></script>
+  <script src="js/store/storage.js"></script>
+  <script src="js/services/locationService.js"></script>
+  <script src="js/services/mapsService.js"></script>
+  <script src="js/logic/filterEngine.js"></script>
+  <script src="js/logic/weightedRandom.js"></script>
+  <script src="js/logic/shareReport.js"></script>
+  <script src="js/components/toast.js"></script>
+  <script src="js/pages/homePage.js"></script>
+  <script src="js/pages/historyPage.js"></script>
+  <script src="js/pages/blacklistPage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(()=>{}); });
+    }
+  </script>
+</body>
+</html>
