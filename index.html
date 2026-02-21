@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>吃啥 EatWhat</title>
   <meta name="description" content="30秒決定今天吃什麼！隨機餐廳推薦" />
-  <meta name="theme-color" content="#7C6FCD" />
+  <meta name="theme-color" content="#a2cbde" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,11 +16,11 @@
       theme: {
         extend: {
           colors: {
-            primary: '#7C6FCD',
-            'primary-dark': '#6B5FB5',
-            'bg-warm': '#FAF6F1',
-            'card': '#FDFAF7',
-            'border-soft': '#E0D7F7',
+            primary: '#a2cbde',
+            'primary-dark': '#8bbacf',
+            'bg-warm': '#F7F5FF',
+            'card': '#FDFAFF',
+            'border-soft': '#D8EEF5',
             'text-main': '#2D2549',
             'text-muted': '#8C7B70',
           }
@@ -29,12 +29,12 @@
     }
   </script>
   <style>
-    body { font-family: 'Noto Sans TC', sans-serif; background-color: #FAF6F1; color: #2D2549; }
+    body { font-family: 'Noto Sans TC', sans-serif; background-color: #F7F5FF; color: #2D2549; }
 
     /* Tag buttons */
-    .tag-btn { transition: all 0.15s ease; color: #8C7B70; border-color: #D5CCE8; }
-    .tag-btn:hover { border-color: #7C6FCD; color: #7C6FCD; }
-    .tag-btn.active { background-color: #EDE9FE; color: #7C6FCD; border-color: #7C6FCD; font-weight: 500; }
+    .tag-btn { transition: all 0.15s ease; color: #8C7B70; border-color: #C8E4EF; }
+    .tag-btn:hover { border-color: #a2cbde; color: #a2cbde; }
+    .tag-btn.active { background-color: #E3F4FA; color: #5aaac5; border-color: #a2cbde; font-weight: 500; }
 
     /* Card entrance animation */
     .card-enter { animation: cardEnter 0.4s ease; }
@@ -56,14 +56,14 @@
     #gps-btn:active { transform: scale(0.93); }
 
     /* Nav active state */
-    .nav-btn.active-nav { color: #7C6FCD; }
+    .nav-btn.active-nav { color: #a2cbde; }
 
     /* Card shadow */
-    .restaurant-card { box-shadow: 0 2px 12px rgba(124, 111, 205, 0.10), 0 1px 3px rgba(45, 37, 73, 0.06); }
+    .restaurant-card { box-shadow: 0 2px 12px rgba(162, 203, 222, 0.18), 0 1px 3px rgba(45, 37, 73, 0.06); }
 
     /* Input focus ring */
     #location-input:focus { outline: none; }
-    .location-box:focus-within { border-color: #7C6FCD; box-shadow: 0 0 0 3px rgba(124,111,205,0.12); }
+    .location-box:focus-within { border-color: #a2cbde; box-shadow: 0 0 0 3px rgba(162,203,222,0.18); }
   </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -72,7 +72,7 @@
 
   <!-- First Visit Modal -->
   <div id="first-visit-modal" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-40 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl border border-purple-100">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl border border-sky-100">
       <div class="text-3xl mb-3">💡</div>
       <h3 class="text-lg font-bold mb-2 text-text-main" data-i18n="firstVisit.title">小提醒</h3>
       <p class="text-text-muted text-sm leading-relaxed" data-i18n="firstVisit.body">你的黑名單和歷史紀錄儲存在這台設備的瀏覽器裡。換設備或清除瀏覽器資料，紀錄就會消失喔！</p>
@@ -82,10 +82,10 @@
 
   <!-- Settings Modal -->
   <div id="settings-modal" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-40 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl border border-purple-100">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl border border-sky-100">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-bold text-text-main" data-i18n="settings.title">設定</h3>
-        <button id="settings-close" class="text-text-muted hover:text-text-main text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-purple-50 transition">✕</button>
+        <button id="settings-close" class="text-text-muted hover:text-text-main text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-sky-50 transition">✕</button>
       </div>
       <div class="mb-4">
         <p class="text-sm text-text-muted mb-2" data-i18n="settings.language">語言</p>
@@ -95,10 +95,10 @@
           <button class="lang-btn tag-btn px-3 py-1 rounded-full border text-sm" data-lang="en">EN</button>
         </div>
       </div>
-      <hr class="border-purple-100 my-3" />
+      <hr class="border-sky-100 my-3" />
       <button id="clear-history-btn" class="w-full text-left text-sm text-red-400 hover:text-red-500 py-2 transition" data-i18n="settings.clearHistory">清除歷史紀錄</button>
       <button id="clear-blacklist-btn" class="w-full text-left text-sm text-red-400 hover:text-red-500 py-2 transition" data-i18n="settings.clearBlacklist">清除黑名單</button>
-      <hr class="border-purple-100 my-3" />
+      <hr class="border-sky-100 my-3" />
       <a href="https://buymeacoffee.com/eatwhatla" target="_blank" class="flex items-center gap-2 text-sm text-yellow-600 hover:text-yellow-700 py-2 transition">
         ☕ <span data-i18n="settings.bmc">喜歡吃啥嗎？請作者喝杯飲料</span>
       </a>
@@ -109,23 +109,23 @@
   <!-- Page: Home -->
   <div id="page-home" class="page">
     <!-- Header -->
-    <div class="bg-white border-b border-purple-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div class="bg-white border-b border-sky-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
       <div>
         <h1 class="text-xl font-bold text-primary">🍽️ 吃啥</h1>
         <p class="text-xs text-text-muted">EatWhat · 呷蝦米</p>
       </div>
-      <button id="settings-btn" class="text-text-muted hover:text-primary text-xl p-1.5 rounded-full hover:bg-purple-50 transition">⚙️</button>
+      <button id="settings-btn" class="text-text-muted hover:text-primary text-xl p-1.5 rounded-full hover:bg-sky-50 transition">⚙️</button>
     </div>
 
     <div class="px-4 py-4 max-w-lg mx-auto">
       <!-- Location Input -->
       <div class="mb-4">
         <div class="flex gap-2">
-          <div class="location-box flex-1 bg-white border border-purple-100 rounded-xl px-4 py-3 flex items-center gap-2 transition">
+          <div class="location-box flex-1 bg-white border border-sky-100 rounded-xl px-4 py-3 flex items-center gap-2 transition">
             <span class="text-primary">📍</span>
             <input id="location-input" type="text" class="bg-transparent flex-1 text-sm outline-none text-text-main placeholder-text-muted" placeholder="輸入地址或地標..." data-i18n-placeholder="home.locationPlaceholder" />
           </div>
-          <button id="gps-btn" class="bg-purple-50 hover:bg-purple-100 border border-purple-200 px-3 py-2 rounded-xl transition flex flex-col items-center gap-0.5" title="自動定位">
+          <button id="gps-btn" class="bg-sky-50 hover:bg-sky-100 border border-sky-200 px-3 py-2 rounded-xl transition flex flex-col items-center gap-0.5" title="自動定位">
             <span class="text-lg leading-none">🎯</span>
             <span class="text-xs text-primary leading-none font-medium" data-i18n="home.gps">定位</span>
           </button>
@@ -134,7 +134,7 @@
       </div>
 
       <!-- CTA Button -->
-      <button id="recommend-btn" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-2xl text-lg transition mb-3 flex items-center justify-center gap-2 shadow-md" style="box-shadow: 0 4px 14px rgba(124,111,205,0.35);">
+      <button id="recommend-btn" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-2xl text-lg transition mb-3 flex items-center justify-center gap-2 shadow-md" style="box-shadow: 0 4px 14px rgba(162,203,222,0.45);">
         <span>🎲</span><span data-i18n="home.cta">幫我決定吃什麼！</span>
       </button>
 
@@ -146,7 +146,7 @@
       </div>
 
       <!-- Filter Panel -->
-      <details class="bg-white border border-purple-100 rounded-2xl mb-4 shadow-sm">
+      <details class="bg-white border border-sky-100 rounded-2xl mb-4 shadow-sm">
         <summary class="px-4 py-3 cursor-pointer text-sm text-text-muted flex items-center justify-between select-none hover:text-text-main transition">
           <span>🔽 <span data-i18n="home.filterTitle">告訴我更多（可不選）</span></span>
           <span class="text-xs text-primary font-medium" id="filter-count"></span>
@@ -235,18 +235,18 @@
       <div id="results-section" class="hidden">
         <h2 class="text-sm font-bold text-text-main mb-3" data-i18n="home.resultsTitle">✨ 今天吃這些吧！</h2>
         <div id="results-container" class="grid grid-cols-2 gap-3 mb-3"></div>
-        <button id="retry-btn" class="w-full bg-white hover:bg-purple-50 border border-purple-100 text-text-muted font-medium py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
+        <button id="retry-btn" class="w-full bg-white hover:bg-sky-50 border border-sky-100 text-text-muted font-medium py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
           🔄 <span data-i18n="home.retry">換兩家試試看</span>
         </button>
       </div>
 
       <!-- Error -->
-      <div id="error-section" class="hidden bg-white border border-purple-100 rounded-2xl p-4 text-center shadow-sm">
+      <div id="error-section" class="hidden bg-white border border-sky-100 rounded-2xl p-4 text-center shadow-sm">
         <div id="error-icon" class="text-3xl mb-2">😅</div>
         <p id="error-message" class="text-sm text-text-muted"></p>
         <div class="flex gap-2 mt-3 justify-center">
           <button id="error-retry-btn" class="hidden bg-primary hover:bg-primary-dark text-white text-sm px-4 py-2 rounded-xl transition" data-i18n="error.relax">放寬條件</button>
-          <button id="error-refresh-btn" class="bg-purple-50 hover:bg-purple-100 text-primary border border-purple-200 text-sm px-4 py-2 rounded-xl transition" data-i18n="error.refresh">重新整理</button>
+          <button id="error-refresh-btn" class="bg-sky-50 hover:bg-sky-100 text-primary border border-sky-200 text-sm px-4 py-2 rounded-xl transition" data-i18n="error.refresh">重新整理</button>
         </div>
       </div>
     </div>
@@ -254,7 +254,7 @@
 
   <!-- Page: History -->
   <div id="page-history" class="page hidden">
-    <div class="bg-white border-b border-purple-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div class="bg-white border-b border-sky-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
       <h2 class="text-lg font-bold text-text-main" data-i18n="history.title">🗓️ 我的足跡</h2>
       <button id="share-report-btn" class="text-xs bg-primary hover:bg-primary-dark px-3 py-1.5 rounded-full text-white transition shadow-sm" data-i18n="history.share">分享月報</button>
     </div>
@@ -265,11 +265,11 @@
         <button id="next-month" class="text-text-muted hover:text-primary px-3 py-1 text-xl transition">›</button>
       </div>
       <div id="calendar-grid" class="mb-4"></div>
-      <div id="day-detail" class="hidden bg-white border border-purple-100 rounded-xl p-4 mb-4 shadow-sm">
+      <div id="day-detail" class="hidden bg-white border border-sky-100 rounded-xl p-4 mb-4 shadow-sm">
         <h4 id="day-detail-title" class="text-sm font-bold text-text-main mb-2"></h4>
         <div id="day-detail-list"></div>
       </div>
-      <div id="monthly-stats" class="bg-white border border-purple-100 rounded-2xl p-4 mb-4 hidden shadow-sm">
+      <div id="monthly-stats" class="bg-white border border-sky-100 rounded-2xl p-4 mb-4 hidden shadow-sm">
         <p class="text-sm font-bold mb-3 text-text-main" data-i18n="history.stats">📊 本月統計</p>
         <div id="stats-content" class="space-y-1 text-sm text-text-muted"></div>
       </div>
@@ -287,7 +287,7 @@
 
   <!-- Page: Blacklist -->
   <div id="page-blacklist" class="page hidden">
-    <div class="bg-white border-b border-purple-100 px-4 py-3 sticky top-0 z-30 shadow-sm">
+    <div class="bg-white border-b border-sky-100 px-4 py-3 sticky top-0 z-30 shadow-sm">
       <h2 class="text-lg font-bold text-text-main" data-i18n="blacklist.title">🚫 黑名單</h2>
     </div>
     <div class="px-4 py-4 max-w-lg mx-auto">
@@ -301,7 +301,7 @@
   </div>
 
   <!-- Bottom Nav -->
-  <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-purple-100 flex z-30 shadow-[0_-2px_12px_rgba(124,111,205,0.08)]">
+  <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-sky-100 flex z-30 shadow-[0_-2px_12px_rgba(162,203,222,0.15)]">
     <button class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-xs text-primary" data-page="home">
       <span class="text-xl">🏠</span><span data-i18n="nav.home">首頁</span>
     </button>

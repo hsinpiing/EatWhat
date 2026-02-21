@@ -60,8 +60,8 @@ const HistoryPage = {
       const extra = records.length > 3 ? `<span class="text-gray-500">+${records.length-3}</span>` : '';
       const isSelected = this.selectedDate === dateStr;
       const hasData = records.length > 0;
-      html += `<div class="day-cell py-1 rounded-lg cursor-pointer ${isSelected ? 'ring-1 ring-primary' : hasData ? 'hover:bg-purple-50' : ''}"
-                    style="${isSelected ? 'background:#EDE9FE' : ''}"
+      html += `<div class="day-cell py-1 rounded-lg cursor-pointer ${isSelected ? 'ring-1 ring-primary' : hasData ? 'hover:bg-sky-50' : ''}"
+                    style="${isSelected ? 'background:#E3F4FA' : ''}"
                     data-date="${dateStr}">
                  <div style="color:#8C7B70;font-size:11px">${d}</div>
                  <div class="text-base leading-none">${emojis}${extra}</div>
@@ -95,7 +95,7 @@ const HistoryPage = {
     const list = document.getElementById('day-detail-list');
     list.innerHTML = records.map(r => {
       const time = r.visitedAt ? new Date(r.visitedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '';
-      return `<div class="flex items-center gap-2 py-1 border-b border-purple-100 last:border-0">
+      return `<div class="flex items-center gap-2 py-1 border-b border-sky-100 last:border-0">
         <span class="text-lg">${r.emoji || '🍽️'}</span>
         <div class="flex-1">
           <p class="text-sm font-medium" style="color:#2D2549">${r.name}</p>

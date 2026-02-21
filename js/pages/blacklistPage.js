@@ -26,7 +26,7 @@ const BlacklistPage = {
     clearBtn.classList.remove('hidden');
 
     container.innerHTML = list.map(item => `
-      <div class="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-purple-100" data-place-id="${item.placeId}">
+      <div class="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-sky-100" data-place-id="${item.placeId}">
         <div>
           <p class="text-sm font-medium" style="color:#2D2549">${item.name}</p>
           <p class="text-xs" style="color:#8C7B70">${item.addedAt || ''}</p>

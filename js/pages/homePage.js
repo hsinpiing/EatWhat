@@ -160,9 +160,9 @@ const HomePage = {
     const photoUrl = photo ? MapsService.getPhotoUrl(photo) : null;
 
     const card = document.createElement('div');
-    card.className = 'restaurant-card bg-white rounded-2xl overflow-hidden flex flex-col border border-purple-100';
+    card.className = 'restaurant-card bg-white rounded-2xl overflow-hidden flex flex-col border border-sky-100';
     card.innerHTML = `
-      ${photoUrl ? `<img src="${photoUrl}" alt="${place.name}" class="w-full h-24 object-cover" loading="lazy" onerror="this.style.display='none'" />` : `<div class="w-full h-24 bg-purple-50 flex items-center justify-center text-4xl">🍽️</div>`}
+      ${photoUrl ? `<img src="${photoUrl}" alt="${place.name}" class="w-full h-24 object-cover" loading="lazy" onerror="this.style.display='none'" />` : `<div class="w-full h-24 bg-sky-50 flex items-center justify-center text-4xl">🍽️</div>`}
       <div class="p-3 flex flex-col gap-1 flex-1">
         <h3 class="font-bold text-sm leading-tight line-clamp-2" style="color:#2D2549">${place.name}</h3>
         <div class="flex items-center gap-1 text-xs" style="color:#8C7B70">
@@ -173,10 +173,10 @@ const HomePage = {
         <p class="text-xs" style="color:#8C7B70">${visitText}</p>
         <div class="mt-auto pt-2 grid grid-cols-2 gap-1">
           <a href="${place.url || `https://www.google.com/maps/place/?q=place_id:${place.place_id}`}" target="_blank"
-             class="text-center text-xs text-white py-1.5 rounded-lg transition" style="background:#7C6FCD">
+             class="text-center text-xs text-white py-1.5 rounded-lg transition" style="background:#a2cbde">
             🗺️ ${t('card.go')}
           </a>
-          <button class="share-btn text-xs py-1.5 rounded-lg transition border border-purple-200" style="background:#F3F0FF;color:#7C6FCD"
+          <button class="share-btn text-xs py-1.5 rounded-lg transition border border-sky-200" style="background:#EBF6FB;color:#5aaac5"
                   data-url="${place.url || ''}" data-name="${place.name}">
             📤 ${t('card.share')}
           </button>
