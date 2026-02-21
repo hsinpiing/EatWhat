@@ -17,7 +17,12 @@ const ShareReport = {
 
     // Build stats
     const stats = this.calcStats(monthData);
-    statsEl.innerHTML = stats.map(s => `<p>${s}</p>`).join('');
+    const statsTitle = t('history.stats').replace('📊 ', '');
+    statsEl.innerHTML = `
+      <p style="font-weight:600;margin-bottom:8px;color:#2D2549;">📊 ${statsTitle}</p>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:5px 12px;">
+        ${stats.map(s => `<span style="color:#2D2549;">${s.label}</span><span style="color:#2D2549;text-align:right;font-weight:500;">${s.value}</span>`).join('')}
+      </div>`;
 
     template.style.left = '-9999px';
     template.style.display = 'block';
@@ -31,24 +36,16 @@ const ShareReport = {
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
       if (!blob) { this.fallbackShare(year, month, stats); return; }
 
-      const file = new File([blob], `EatWhat-${monthStr}.png`, { type: 'image/png' });
       try {
-        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({ files: [file], title: '吃啥月報', text: `我的 ${monthStr} 飲食足跡 🍽️` });
-        } else {
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob);
-          a.download = `EatWhat-${monthStr}.png`;
-          a.click();
-          showToast('📥 已儲存圖片！');
-        }
-      } catch(shareErr) {
-        // share cancelled or failed — fall back to download
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        showToast(t('toast.copied.image'));
+      } catch {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = `EatWhat-${monthStr}.png`;
         a.click();
-        showToast('📥 已儲存圖片！');
+        URL.revokeObjectURL(a.href);
+        showToast(t('toast.saved.image'));
       }
     } catch(e) {
       template.style.display = 'none';
@@ -79,19 +76,20 @@ const ShareReport = {
   },
 
   calcStats(monthData) {
-    if (monthData.length === 0) return [t('history.empty')];
+    if (monthData.length === 0) return [];
     const types = {};
     monthData.forEach(h => { types[h.category || '🍽️'] = (types[h.category || '🍽️'] || 0) + 1; });
     const topEntry = Object.entries(types).sort((a,b) => b[1]-a[1])[0];
     return [
-      t('stats.visits', { n: monthData.length }),
-      t('stats.types', { n: Object.keys(types).length }),
-      topEntry ? t('stats.top', { emoji: topEntry[0], type: topEntry[0], n: topEntry[1] }) : ''
+      { label: t('stats.visits.label'), value: `${monthData.length} ${t('stats.visits.unit')}` },
+      { label: t('stats.types.label'), value: `${Object.keys(types).length} ${t('stats.types.unit')}` },
+      topEntry ? { label: t('stats.top.label'), value: topEntry[0] } : null
     ].filter(Boolean);
   },
 
   fallbackShare(year, month, stats) {
-    const text = `🍽️ 吃啥 EatWhat ${year}/${month}\n${stats.join('\n')}\neatwhatla.vercel.app`;
+    const statsText = stats.map(s => `${s.label} ${s.value}`).join('\n');
+    const text = `🍽️ 吃啥 EatWhat ${year}/${month}\n${statsText}\neatwhatla.vercel.app`;
     if (navigator.share) navigator.share({ text });
     else { navigator.clipboard?.writeText(text); showToast('已複製到剪貼簿！'); }
   }

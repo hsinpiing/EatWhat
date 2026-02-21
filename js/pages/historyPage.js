@@ -113,10 +113,13 @@ const HistoryPage = {
     monthData.forEach(h => { types[h.emoji || '🍽️'] = (types[h.emoji || '🍽️'] || 0) + 1; });
     const topEntry = Object.entries(types).sort((a,b) => b[1]-a[1])[0];
     const statsEl = document.getElementById('stats-content');
-    statsEl.innerHTML = [
-      `<p>${t('stats.visits', { n: monthData.length })}</p>`,
-      `<p>${t('stats.types', { n: Object.keys(types).length })}</p>`,
-      topEntry ? `<p>${t('stats.top', { emoji: topEntry[0], type: topEntry[0], n: topEntry[1] })}</p>` : ''
-    ].join('');
+    const stats = [
+      { label: t('stats.visits.label'), value: `${monthData.length} ${t('stats.visits.unit')}` },
+      { label: t('stats.types.label'), value: `${Object.keys(types).length} ${t('stats.types.unit')}` },
+      topEntry ? { label: t('stats.top.label'), value: topEntry[0] } : null
+    ].filter(Boolean);
+    statsEl.innerHTML = `<div style="display:grid;grid-template-columns:1fr auto;gap:5px 12px;">
+      ${stats.map(s => `<span>${s.label}</span><span style="text-align:right;font-weight:500;">${s.value}</span>`).join('')}
+    </div>`;
   }
 };

@@ -53,8 +53,15 @@ const TRANSLATIONS = {
     'card.visited': '去過 {n} 次', 'card.firstTime': '首次推薦',
     'card.go': '帶我去', 'card.share': '分享', 'card.pick': '就這家！', 'card.ban': '不想去',
     'stats.visits': '用了吃啥 {n} 次',
+    'stats.visits.label': '用了吃啥',
+    'stats.visits.unit': '次',
     'stats.types': '探索了 {n} 種料理',
-    'stats.top': '最愛：{emoji} {type}（{n}次）',
+    'stats.types.label': '探索了',
+    'stats.types.unit': '種料理',
+    'stats.top': '最愛：{emoji}（{n}次）',
+    'stats.top.label': '最愛',
+    'toast.copied.image': '📋 已複製！可直接貼到 IG、Line 等',
+    'toast.saved.image': '📥 已儲存圖片！',
     'confirm.clearHistory': '確定要清除所有歷史紀錄嗎？',
     'confirm.clearBlacklist': '確定要清除所有黑名單嗎？',
     'confirm.clearAllBlacklist': '確定要清空全部黑名單嗎？',
@@ -113,8 +120,15 @@ const TRANSLATIONS = {
     'card.visited': '去过 {n} 次', 'card.firstTime': '首次推荐',
     'card.go': '带我去', 'card.share': '分享', 'card.pick': '就这家！', 'card.ban': '不想去',
     'stats.visits': '用了吃啥 {n} 次',
+    'stats.visits.label': '用了吃啥',
+    'stats.visits.unit': '次',
     'stats.types': '探索了 {n} 种料理',
-    'stats.top': '最爱：{emoji} {type}（{n}次）',
+    'stats.types.label': '探索了',
+    'stats.types.unit': '种料理',
+    'stats.top': '最爱：{emoji}（{n}次）',
+    'stats.top.label': '最爱',
+    'toast.copied.image': '📋 已复制！可直接贴到 IG、Line 等',
+    'toast.saved.image': '📥 已保存图片！',
     'confirm.clearHistory': '确定要清除所有历史记录吗？',
     'confirm.clearBlacklist': '确定要清除所有黑名单吗？',
     'confirm.clearAllBlacklist': '确定要清空全部黑名单吗？',
@@ -173,8 +187,15 @@ const TRANSLATIONS = {
     'card.visited': 'Visited {n}x', 'card.firstTime': 'First time!',
     'card.go': 'Navigate', 'card.share': 'Share', 'card.pick': 'This one!', 'card.ban': 'Nope',
     'stats.visits': 'Used EatWhat {n} times',
+    'stats.visits.label': 'Used EatWhat',
+    'stats.visits.unit': 'times',
     'stats.types': 'Explored {n} cuisines',
-    'stats.top': 'Fave: {emoji} {type} ({n}x)',
+    'stats.types.label': 'Explored',
+    'stats.types.unit': 'cuisines',
+    'stats.top': 'Fave: {emoji} ({n}x)',
+    'stats.top.label': 'Fave',
+    'toast.copied.image': '📋 Copied! Paste anywhere.',
+    'toast.saved.image': '📥 Image saved!',
     'confirm.clearHistory': 'Clear all history?',
     'confirm.clearBlacklist': 'Clear all blacklist?',
     'confirm.clearAllBlacklist': 'Clear entire blacklist?',
@@ -197,7 +218,11 @@ function t(key, vars = {}) {
 
 function getCurrentLang() {
   const s = JSON.parse(localStorage.getItem('eatwhat_settings') || '{}');
-  return s.language || 'en';
+  if (s.language) return s.language;
+  const nav = (navigator.language || 'en').toLowerCase();
+  if (nav.startsWith('zh-tw') || nav.startsWith('zh-hant')) return 'zh-TW';
+  if (nav.startsWith('zh')) return 'zh-CN';
+  return 'en';
 }
 
 function setLanguage(lang) {
