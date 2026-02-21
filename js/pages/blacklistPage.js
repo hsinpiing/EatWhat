@@ -33,7 +33,7 @@ const BlacklistPage = {
         </div>
         <button class="remove-btn text-xs px-3 py-1 border border-red-200 rounded-lg transition" style="color:#dc2626;background:#FFF1F2"
                 data-place-id="${item.placeId}">
-          移除
+          ${t('blacklist.remove')}
         </button>
       </div>
     `).join('');

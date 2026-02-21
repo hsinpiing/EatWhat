@@ -24,7 +24,9 @@ const Storage = {
         list.push({ placeId: place.placeId, name: place.name, addedAt: new Date().toISOString().slice(0,10) });
         localStorage.setItem(STORAGE_KEYS.BLACKLIST, JSON.stringify(list));
       }
-    } catch(e) {}
+    } catch(e) {
+      if (e.name === 'QuotaExceededError') showToast('儲存空間不足，建議清理歷史紀錄', 'error');
+    }
   },
   removeBlacklist(placeId) {
     const list = this.getBlacklist().filter(p => p.placeId !== placeId);

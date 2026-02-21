@@ -211,7 +211,7 @@ const HomePage = {
     card.querySelector('.share-btn').addEventListener('click', (e) => {
       const url = e.target.dataset.url || `https://www.google.com/maps/place/?q=place_id:${place.place_id}`;
       if (navigator.share) navigator.share({ title: place.name, url });
-      else { navigator.clipboard?.writeText(url); showToast('已複製連結！'); }
+      else { navigator.clipboard?.writeText(url); showToast(t('toast.copied')); }
     });
 
     return card;

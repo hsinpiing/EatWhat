@@ -52,7 +52,7 @@ const TRANSLATIONS = {
     'error.relax': '放寬條件', 'error.refresh': '重新整理',
     'card.visited': '去過 {n} 次', 'card.firstTime': '首次推薦',
     'card.go': '帶我去', 'card.share': '分享', 'card.pick': '就這家！', 'card.ban': '不想去',
-    'stats.visits': '共出門吃了 {n} 次',
+    'stats.visits': '用了吃啥 {n} 次',
     'stats.types': '探索了 {n} 種料理',
     'stats.top': '最愛：{emoji} {type}（{n}次）',
     'confirm.clearHistory': '確定要清除所有歷史紀錄嗎？',
@@ -62,6 +62,8 @@ const TRANSLATIONS = {
     'toast.banned': '🚫 已加入黑名單',
     'toast.removed': '✅ 已從黑名單移除',
     'toast.cleared': '✅ 已清除完成',
+    'toast.copied': '已複製連結！',
+    'blacklist.remove': '移除',
     'loading': '找餐廳中...',
   },
   'zh-CN': {
@@ -110,7 +112,7 @@ const TRANSLATIONS = {
     'error.relax': '放宽条件', 'error.refresh': '重新整理',
     'card.visited': '去过 {n} 次', 'card.firstTime': '首次推荐',
     'card.go': '带我去', 'card.share': '分享', 'card.pick': '就这家！', 'card.ban': '不想去',
-    'stats.visits': '共出门吃了 {n} 次',
+    'stats.visits': '用了吃啥 {n} 次',
     'stats.types': '探索了 {n} 种料理',
     'stats.top': '最爱：{emoji} {type}（{n}次）',
     'confirm.clearHistory': '确定要清除所有历史记录吗？',
@@ -120,6 +122,8 @@ const TRANSLATIONS = {
     'toast.banned': '🚫 已加入黑名单',
     'toast.removed': '✅ 已从黑名单移除',
     'toast.cleared': '✅ 已清除完成',
+    'toast.copied': '已复制链接！',
+    'blacklist.remove': '移除',
     'loading': '找餐厅中...',
   },
   'en': {
@@ -168,7 +172,7 @@ const TRANSLATIONS = {
     'error.relax': 'Relax filters', 'error.refresh': 'Refresh',
     'card.visited': 'Visited {n}x', 'card.firstTime': 'First time!',
     'card.go': 'Navigate', 'card.share': 'Share', 'card.pick': 'This one!', 'card.ban': 'Nope',
-    'stats.visits': 'Ate out {n} times',
+    'stats.visits': 'Used EatWhat {n} times',
     'stats.types': 'Explored {n} cuisines',
     'stats.top': 'Fave: {emoji} {type} ({n}x)',
     'confirm.clearHistory': 'Clear all history?',
@@ -178,6 +182,8 @@ const TRANSLATIONS = {
     'toast.banned': '🚫 Added to blacklist',
     'toast.removed': '✅ Removed from blacklist',
     'toast.cleared': '✅ Cleared!',
+    'toast.copied': 'Link copied!',
+    'blacklist.remove': 'Remove',
     'loading': 'Finding restaurants...',
   }
 };

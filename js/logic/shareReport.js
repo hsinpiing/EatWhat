@@ -25,7 +25,7 @@ const ShareReport = {
     try {
       const html2canvas = window.html2canvas;
       if (!html2canvas) { this.fallbackShare(year, month, stats); return; }
-      const canvas = await html2canvas(template, { backgroundColor: '#030712', scale: 2 });
+      const canvas = await html2canvas(template, { backgroundColor: '#F7F5FF', scale: 2 });
       template.style.display = 'none';
 
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
@@ -66,13 +66,13 @@ const ShareReport = {
     const daysInMonth = new Date(year, month, 0).getDate();
     const dayHeaders = ['日','一','二','三','四','五','六'];
     let html = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:11px;">`;
-    dayHeaders.forEach(d => { html += `<div style="color:#6b7280;padding:2px;">${d}</div>`; });
+    dayHeaders.forEach(d => { html += `<div style="color:#8C7B70;padding:2px;">${d}</div>`; });
     for (let i = 0; i < firstDay; i++) html += `<div></div>`;
     for (let d = 1; d <= daysInMonth; d++) {
       const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const emojis = byDate[dateStr] || [];
       const display = emojis.slice(0,2).join('') + (emojis.length > 2 ? '+' : '');
-      html += `<div style="padding:2px;"><div style="color:#9ca3af;font-size:10px;">${d}</div><div style="font-size:12px;">${display}</div></div>`;
+      html += `<div style="padding:2px;"><div style="color:#8C7B70;font-size:10px;">${d}</div><div style="font-size:12px;">${display}</div></div>`;
     }
     html += '</div>';
     return html;
@@ -91,7 +91,7 @@ const ShareReport = {
   },
 
   fallbackShare(year, month, stats) {
-    const text = `🍽️ 吃啥 EatWhat ${year}/${month}\n${stats.join('\n')}\neatwhat.app`;
+    const text = `🍽️ 吃啥 EatWhat ${year}/${month}\n${stats.join('\n')}\neatwhatla.vercel.app`;
     if (navigator.share) navigator.share({ text });
     else { navigator.clipboard?.writeText(text); showToast('已複製到剪貼簿！'); }
   }

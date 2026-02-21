@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById(pages[page]).classList.remove('hidden');
     document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.classList.toggle('text-primary', btn.dataset.page === page);
-      btn.classList.toggle('text-gray-400', btn.dataset.page !== page);
+      btn.classList.remove('text-primary', 'text-text-muted');
+      btn.classList.add(btn.dataset.page === page ? 'text-primary' : 'text-text-muted');
     });
     currentPage = page;
     if (page === 'history') HistoryPage.render();
