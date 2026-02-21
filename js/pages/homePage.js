@@ -12,11 +12,16 @@ const HomePage = {
       status.textContent = '📍 定位中...';
       try {
         const coords = await LocationService.getCurrentPosition();
-        const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coords.lat},${coords.lng}&key=${MAPS_API_KEY}&language=${getCurrentLang()}`);
-        const data = await res.json();
-        if (data.results && data.results[0]) {
-          document.getElementById('location-input').value = data.results[0].formatted_address;
-        }
+        // Use Maps JS SDK Geocoder for reverse geocoding (works with HTTP Referrer restricted keys)
+        const geocoder = new google.maps.Geocoder();
+        await new Promise(resolve => {
+          geocoder.geocode({ location: coords, language: getCurrentLang() }, (results, status) => {
+            if (status === 'OK' && results && results[0]) {
+              document.getElementById('location-input').value = results[0].formatted_address;
+            }
+            resolve();
+          });
+        });
         status.textContent = '✅ 定位成功';
         setTimeout(() => status.textContent = '', 2000);
       } catch(e) {

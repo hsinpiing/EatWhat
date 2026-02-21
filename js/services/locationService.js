@@ -22,15 +22,19 @@ const LocationService = {
   },
 
   async geocodeAddress(address) {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${MAPS_API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.status === 'OK' && data.results.length > 0) {
-      const loc = data.results[0].geometry.location;
-      this.currentCoords = { lat: loc.lat, lng: loc.lng };
-      return { coords: this.currentCoords, formatted: data.results[0].formatted_address };
-    }
-    throw new Error('GEOCODE_FAILED');
+    // Use Maps JS SDK Geocoder (works with HTTP Referrer restricted keys)
+    return new Promise((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === 'OK' && results.length > 0) {
+          const loc = results[0].geometry.location;
+          this.currentCoords = { lat: loc.lat(), lng: loc.lng() };
+          resolve({ coords: this.currentCoords, formatted: results[0].formatted_address });
+        } else {
+          reject(new Error('GEOCODE_FAILED'));
+        }
+      });
+    });
   },
 
   getCoords() {
