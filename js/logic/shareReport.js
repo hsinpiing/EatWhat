@@ -27,17 +27,29 @@ const ShareReport = {
       if (!html2canvas) { this.fallbackShare(year, month, stats); return; }
       const canvas = await html2canvas(template, { backgroundColor: '#030712', scale: 2 });
       template.style.display = 'none';
-      canvas.toBlob(blob => {
-        const file = new File([blob], `EatWhat-${monthStr}.png`, { type: 'image/png' });
-        if (navigator.share && navigator.canShare({ files: [file] })) {
-          navigator.share({ files: [file], title: '吃啥月報', text: `我的 ${monthStr} 飲食足跡 🍽️` });
+
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) { this.fallbackShare(year, month, stats); return; }
+
+      const file = new File([blob], `EatWhat-${monthStr}.png`, { type: 'image/png' });
+      try {
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: '吃啥月報', text: `我的 ${monthStr} 飲食足跡 🍽️` });
         } else {
           const a = document.createElement('a');
           a.href = URL.createObjectURL(blob);
           a.download = `EatWhat-${monthStr}.png`;
           a.click();
+          showToast('📥 已儲存圖片！');
         }
-      });
+      } catch(shareErr) {
+        // share cancelled or failed — fall back to download
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `EatWhat-${monthStr}.png`;
+        a.click();
+        showToast('📥 已儲存圖片！');
+      }
     } catch(e) {
       template.style.display = 'none';
       this.fallbackShare(year, month, stats);

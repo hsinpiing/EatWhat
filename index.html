@@ -84,7 +84,10 @@
             <span class="text-primary">📍</span>
             <input id="location-input" type="text" class="bg-transparent flex-1 text-sm outline-none placeholder-gray-500" placeholder="輸入地址或地標..." data-i18n-placeholder="home.locationPlaceholder" />
           </div>
-          <button id="gps-btn" class="bg-gray-800 hover:bg-gray-700 px-3 rounded-xl text-lg transition" title="自動定位">🎯</button>
+          <button id="gps-btn" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-xl transition flex flex-col items-center gap-0.5" title="自動定位">
+            <span class="text-lg leading-none">🎯</span>
+            <span class="text-xs text-gray-300 leading-none" data-i18n="home.gps">定位</span>
+          </button>
         </div>
         <p id="location-status" class="text-xs text-gray-500 mt-1 px-1"></p>
       </div>
