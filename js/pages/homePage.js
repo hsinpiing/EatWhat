@@ -155,31 +155,31 @@ const HomePage = {
     const photoUrl = photo ? MapsService.getPhotoUrl(photo) : null;
 
     const card = document.createElement('div');
-    card.className = 'restaurant-card bg-gray-800 rounded-2xl overflow-hidden flex flex-col';
+    card.className = 'restaurant-card bg-white rounded-2xl overflow-hidden flex flex-col border border-purple-100';
     card.innerHTML = `
-      ${photoUrl ? `<img src="${photoUrl}" alt="${place.name}" class="w-full h-24 object-cover" loading="lazy" onerror="this.style.display='none'" />` : `<div class="w-full h-24 bg-gray-700 flex items-center justify-center text-4xl">🍽️</div>`}
+      ${photoUrl ? `<img src="${photoUrl}" alt="${place.name}" class="w-full h-24 object-cover" loading="lazy" onerror="this.style.display='none'" />` : `<div class="w-full h-24 bg-purple-50 flex items-center justify-center text-4xl">🍽️</div>`}
       <div class="p-3 flex flex-col gap-1 flex-1">
-        <h3 class="font-bold text-sm leading-tight line-clamp-2">${place.name}</h3>
-        <div class="flex items-center gap-1 text-xs text-gray-400">
+        <h3 class="font-bold text-sm leading-tight line-clamp-2" style="color:#2D2549">${place.name}</h3>
+        <div class="flex items-center gap-1 text-xs" style="color:#8C7B70">
           ${place.rating ? `<span>${place.rating} ⭐</span>` : ''}
           ${priceText ? `<span>· ${priceText}</span>` : ''}
           ${distText ? `<span>· ${distText}</span>` : ''}
         </div>
-        <p class="text-xs text-gray-500">${visitText}</p>
+        <p class="text-xs" style="color:#8C7B70">${visitText}</p>
         <div class="mt-auto pt-2 grid grid-cols-2 gap-1">
           <a href="${place.url || `https://www.google.com/maps/place/?q=place_id:${place.place_id}`}" target="_blank"
-             class="text-center text-xs bg-primary hover:bg-primary-dark text-white py-1.5 rounded-lg transition">
+             class="text-center text-xs text-white py-1.5 rounded-lg transition" style="background:#7C6FCD">
             🗺️ ${t('card.go')}
           </a>
-          <button class="share-btn text-xs bg-gray-700 hover:bg-gray-600 text-white py-1.5 rounded-lg transition"
+          <button class="share-btn text-xs py-1.5 rounded-lg transition border border-purple-200" style="background:#F3F0FF;color:#7C6FCD"
                   data-url="${place.url || ''}" data-name="${place.name}">
             📤 ${t('card.share')}
           </button>
-          <button class="pick-btn text-xs bg-green-700 hover:bg-green-600 text-white py-1.5 rounded-lg transition col-span-1"
+          <button class="pick-btn text-xs py-1.5 rounded-lg transition col-span-1 border border-green-200" style="background:#F0FDF4;color:#16a34a"
                   data-place-id="${place.place_id}" data-name="${place.name}">
             ✅ ${t('card.pick')}
           </button>
-          <button class="ban-btn text-xs bg-red-900 hover:bg-red-800 text-white py-1.5 rounded-lg transition"
+          <button class="ban-btn text-xs py-1.5 rounded-lg transition border border-red-200" style="background:#FFF1F2;color:#dc2626"
                   data-place-id="${place.place_id}" data-name="${place.name}">
             ❌ ${t('card.ban')}
           </button>
