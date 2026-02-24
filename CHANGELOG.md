@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] - 2026-02-24
+
+### 🐛 Bug Fixes
+- 修復手機版「Locate Me」按鈕被截斷問題：`#gps-btn` 加入 `shrink-0`，`body` 加入 `overflow-x-hidden`
+
 ## [1.0.0] - 2026-02-21
 
 ### ✨ Features
