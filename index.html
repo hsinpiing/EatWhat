@@ -66,7 +66,7 @@
     .location-box:focus-within { border-color: #a2cbde; box-shadow: 0 0 0 3px rgba(162,203,222,0.18); }
   </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen pb-20 overflow-x-hidden">
 
   <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
 
@@ -125,7 +125,7 @@
             <span class="text-primary">📍</span>
             <input id="location-input" type="text" class="bg-transparent flex-1 text-sm outline-none text-text-main placeholder-text-muted" placeholder="輸入地址或地標..." data-i18n-placeholder="home.locationPlaceholder" />
           </div>
-          <button id="gps-btn" class="bg-sky-50 hover:bg-sky-100 border border-sky-200 px-3 py-2 rounded-xl transition flex flex-col items-center gap-0.5" title="自動定位">
+          <button id="gps-btn" class="shrink-0 bg-sky-50 hover:bg-sky-100 border border-sky-200 px-3 py-2 rounded-xl transition flex flex-col items-center gap-0.5" title="自動定位">
             <span class="text-lg leading-none">🎯</span>
             <span class="text-xs text-primary leading-none font-medium" data-i18n="home.gps">定位</span>
           </button>
