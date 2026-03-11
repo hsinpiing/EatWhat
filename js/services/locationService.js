@@ -1,5 +1,7 @@
 const LocationService = {
   currentCoords: null,
+  _geocoder: null,
+  _getGeocoder() { return this._geocoder || (this._geocoder = new google.maps.Geocoder()); },
 
   async getCurrentPosition() {
     return new Promise((resolve, reject) => {
@@ -24,8 +26,7 @@ const LocationService = {
   async geocodeAddress(address) {
     // Use Maps JS SDK Geocoder (works with HTTP Referrer restricted keys)
     return new Promise((resolve, reject) => {
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ address }, (results, status) => {
+      this._getGeocoder().geocode({ address }, (results, status) => {
         if (status === 'OK' && results.length > 0) {
           const loc = results[0].geometry.location;
           this.currentCoords = { lat: loc.lat(), lng: loc.lng() };

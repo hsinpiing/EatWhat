@@ -8,7 +8,7 @@ const Storage = {
       history.unshift(record);
       localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(history));
     } catch(e) {
-      if (e.name === 'QuotaExceededError') showToast('儲存空間不足，建議清理歷史紀錄', 'error');
+      if (e.name === 'QuotaExceededError') showToast(t('error.quota'), 'error');
     }
   },
   clearHistory() {
@@ -25,7 +25,7 @@ const Storage = {
         localStorage.setItem(STORAGE_KEYS.BLACKLIST, JSON.stringify(list));
       }
     } catch(e) {
-      if (e.name === 'QuotaExceededError') showToast('儲存空間不足，建議清理歷史紀錄', 'error');
+      if (e.name === 'QuotaExceededError') showToast(t('error.quota'), 'error');
     }
   },
   removeBlacklist(placeId) {

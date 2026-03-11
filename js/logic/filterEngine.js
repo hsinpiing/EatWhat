@@ -39,7 +39,8 @@ const FilterEngine = {
   },
 
   applyClientFilter(results) {
-    return results.filter(p => !Storage.isBlacklisted(p.place_id));
+    const blacklist = new Set(Storage.getBlacklist().map(p => p.placeId));
+    return results.filter(p => !blacklist.has(p.place_id));
   },
 
   buildParams() {

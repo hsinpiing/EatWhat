@@ -9,20 +9,19 @@ const HomePage = {
   bindLocationButtons() {
     document.getElementById('gps-btn').addEventListener('click', async () => {
       const status = document.getElementById('location-status');
-      status.textContent = '📍 定位中...';
+      status.textContent = t('gps.locating');
       try {
         const coords = await LocationService.getCurrentPosition();
         // Use Maps JS SDK Geocoder for reverse geocoding (works with HTTP Referrer restricted keys)
-        const geocoder = new google.maps.Geocoder();
         await new Promise(resolve => {
-          geocoder.geocode({ location: coords, language: getCurrentLang() }, (results, status) => {
+          LocationService._getGeocoder().geocode({ location: coords, language: getCurrentLang() }, (results, status) => {
             if (status === 'OK' && results && results[0]) {
               document.getElementById('location-input').value = results[0].formatted_address;
             }
             resolve();
           });
         });
-        status.textContent = '✅ 定位成功';
+        status.textContent = t('gps.success');
         setTimeout(() => status.textContent = '', 2000);
       } catch(e) {
         status.textContent = t('error.location');
@@ -41,12 +40,8 @@ const HomePage = {
         } else {
           const wasActive = btn.classList.contains('active');
           document.querySelectorAll(`.tag-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
-          if (!wasActive) {
-            btn.classList.add('active');
-            FilterEngine.setFilter(group, value);
-          } else {
-            FilterEngine.setFilter(group, value);
-          }
+          if (!wasActive) btn.classList.add('active');
+          FilterEngine.setFilter(group, value);
         }
       });
     });
@@ -153,7 +148,6 @@ const HomePage = {
   createCard(place, userCoords) {
     const visitCount = Storage.getVisitCount(place.place_id);
     const distText = MapsService.getDistanceText(place, userCoords);
-    const stars = place.rating ? '⭐'.repeat(Math.round(place.rating)) : '';
     const priceText = place.price_level ? '$'.repeat(place.price_level) : '';
     const visitText = visitCount > 0 ? t('card.visited', { n: visitCount }) : t('card.firstTime');
     const photo = place.photos && place.photos[0] ? place.photos[0] : null;

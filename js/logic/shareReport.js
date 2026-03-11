@@ -91,6 +91,6 @@ const ShareReport = {
     const statsText = stats.map(s => `${s.label} ${s.value}`).join('\n');
     const text = `🍽️ 吃啥 EatWhat ${year}/${month}\n${statsText}\neatwhatla.vercel.app`;
     if (navigator.share) navigator.share({ text });
-    else { navigator.clipboard?.writeText(text); showToast('已複製到剪貼簿！'); }
+    else { navigator.clipboard?.writeText(text); showToast(t('toast.copied.image')); }
   }
 };
